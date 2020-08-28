@@ -52,23 +52,25 @@ public class InsertExcutor {
 		if(id.isAutoGenerateId() && (dataBase == DataBase.MYSQL||dataBase == DataBase.SQL_SERVER)){
 			paramter.put(Constant.SQL_SYMBOL, sql.toString());
 			Map<String, Object> result = context.getDaoMapper().insertUseReturnGeneratedKeys(paramter);
-			Field idField = id.getField();
-			Object resultId =  result.get("id");
-			if (resultId != null) {
-				Class<?> type = (Class<?>) idField.getGenericType();
-				if (type == int.class || type == Integer.class) {
-					ReflectionUtils.setValue(target, idField, Integer.parseInt(resultId.toString()));
-				} else if (type == long.class || type == Long.class) {
-					ReflectionUtils.setValue(target, idField, Long.parseLong(resultId.toString()));
-				} else if(type == BigDecimal.class){
-					ReflectionUtils.setValue(target, idField, new BigDecimal(resultId.toString()));
-				} else if(type == BigInteger.class){
-					ReflectionUtils.setValue(target, idField, new BigInteger(resultId.toString()));
+			if(result!=null) {
+				Field idField = id.getField();
+				Object resultId =  result.get("id");
+				if (resultId != null) {
+					Class<?> type = (Class<?>) idField.getGenericType();
+					if (type == int.class || type == Integer.class) {
+						ReflectionUtils.setValue(target, idField, Integer.parseInt(resultId.toString()));
+					} else if (type == long.class || type == Long.class) {
+						ReflectionUtils.setValue(target, idField, Long.parseLong(resultId.toString()));
+					} else if(type == BigDecimal.class){
+						ReflectionUtils.setValue(target, idField, new BigDecimal(resultId.toString()));
+					} else if(type == BigInteger.class){
+						ReflectionUtils.setValue(target, idField, new BigInteger(resultId.toString()));
+					}
 				}
-			}
-			
-			if (result.get("count") != null) {
-				count = (int) result.get("count");
+				
+				if (result.get("count") != null) {
+					count = (int) result.get("count");
+				}
 			}
 		}else if(id.isAutoGenerateId() &&dataBase == DataBase.ORACLE){
 			
