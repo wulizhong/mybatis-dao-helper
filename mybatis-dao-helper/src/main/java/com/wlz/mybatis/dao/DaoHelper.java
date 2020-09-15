@@ -314,6 +314,7 @@ public class DaoHelper {
 		SelectContext sc = new SelectContext(t, daoConfig, daoMapper, cnd);
 		SelectExcutor selector = new SelectExcutor();
 		selector = new FieldFilterSelectExcutor(filter,selector);
+		selector = new PageSelectExcutor(selector, new Page(0, 1));
 		List<T> resultList = selector.select(sc);
 		return CollectionUtils.isEmpty(resultList) ? null : resultList.get(0);
 	}
@@ -321,6 +322,7 @@ public class DaoHelper {
 	public <T> T selectOne(Class<T> t, ICondation cnd) {
 		SelectContext sc = new SelectContext(t, daoConfig, daoMapper, cnd);
 		SelectExcutor select = new SelectExcutor();
+		select = new PageSelectExcutor(select, new Page(0, 1));
 		List<T> resultList = select.select(sc);
 		return CollectionUtils.isEmpty(resultList) ? null : resultList.get(0);
 	}
